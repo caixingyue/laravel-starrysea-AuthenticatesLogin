@@ -9,78 +9,56 @@
 您可以通过 composer 安装软件包：
 
 ``` bash
-composer require starrysea/database
+composer require starrysea/multi-auth
 ```
 ### Lumen
 
 您可以通过 composer 安装软件包：
 
 ``` bash
-composer require starrysea/database
+composer require starrysea/multi-auth
 ```
 
 ## 用法
 
 ```php
-use Starrysea\Database\Expansion;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Starrysea\MultiAuth\MultiUsers;
 
-class User
+class MultiUsersGatherTest
 {
-    use Expansion;
-
-    // 通知扩展这是账户模型
-    protected $account_model = true;
-}
-```
-
-```php
-use App\Models\User;
-
-class ExpansionGatherTest
-{
-    public static function unixtime()
-    {
-        return User::unixtime('intimes')->find(1); // intimes => 2018-11-26 12:25:59
-//        return User::unixtime('intimes', '%Y-%m-%d')->find(1); // intimes => 2018-11-26
+    // 引入处理应用程序的身份验证用户组件
+    use AuthenticatesUsers,MultiUsers{
+        MultiUsers::logout insteadof AuthenticatesUsers;
+        MultiUsers::sendFailedLoginResponse insteadof AuthenticatesUsers;
     }
 
-    public static function isWhere()
+    // 配置登录成功后重定向地址
+    protected $redirectTo = 'admin';
+
+    // 重写登录账号为登录名字段
+    public function username()
     {
-        $dataone = '蔡星月';
-        $datatwo = '';
-        return User::where('id', 1)->isWhere('name', $dataone)->get(); // []
-//        return User::where('id', 1)->isWhere('name', '<>', $dataone)->get(); // [User]
-//        return User::where('id', 1)->isWhere('name', $datatwo)->get(); // [User]
+        return 'username';
     }
 
-    public static function isorWhere()
+    // 创建一个新的控制器实例
+    public function __construct()
     {
-        $dataone = '蔡星月';
-        $datatwo = '';
-        return User::where('id', 1)->isorWhere('name', $dataone)->get(); // [User]
-//        return User::where('id', 1)->isorWhere('name', $datatwo)->get(); // [User]
+        $this->middleware('guest:admin')->except('logout');
     }
 
-    public static function isWhereBranchsieve()
+    // 重写显示应用程序的登录表单
+    public function showLoginForm()
     {
-        $data = '蔡星月';
-        return User::isWhereBranchsieve(
-            $data, // content
-            'id', // accurate filed
-            ['name'] // participle filed
-        )->toSql(); // select * from `xh_users` where (`id` = ? or ((`name` like ?) and (`name` like ?)))
+        return view('admin.login');
     }
 
-    public static function worddivision()
+    // 重写验证过程中使用的身份信息
+    protected function guard()
     {
-        $data = '蔡星月';
-        return User::worddivision($data, function ($query, $words, $data){ // success
-            // $words => ['蔡', '星月']
-            // $data => '蔡星月'
-        }, function ($query, $words, $data){ // error
-            // $words => false
-            // $data => source
-        })->find(1);
+        return Auth::guard('admin');
     }
 }
 ```
