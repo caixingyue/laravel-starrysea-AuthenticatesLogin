@@ -52,6 +52,17 @@ composer require starrysea/multi-auth
 ```
 
 ```php
+// routes/web.php
+
+// 登录及登出
+Route::get('login', 'Admin\LoginController@showLoginForm');
+Route::post('login', 'Admin\LoginController@login')->name('admin.login');
+Route::post('logout', 'Admin\LoginController@logout')->name('admin.logout');
+
+Route::get('/', 'Admin\IndexController@index')->middleware('auth:admin');
+```
+
+```php
 // app/Exceptions/Handler.php
 
 class Handler extends ExceptionHandler
