@@ -25,6 +25,7 @@ composer require starrysea/multi-auth
 // config/auth.php
 
 ...
+
 'guards' => [
     ...
 
@@ -46,8 +47,35 @@ composer require starrysea/multi-auth
     
     ...
 ],
-...
 
+...
+```
+
+```php
+// app\Exceptions\Handler.php
+
+class Handler extends ExceptionHandler
+{
+    ...
+    
+    /**
+     * 重写没有登录时要跳转的登录页面
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param AuthenticationException $exception
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()){
+            return response()->json(['message' => $exception->getMessage()], 401);
+        }elseif (in_array('admin',$exception->guards())){
+            return redirect()->guest(route('admin.login'));
+        }else{
+            return redirect()->guest(route('login'));
+        }
+    }
+}
 ```
 
 ```php
