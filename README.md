@@ -52,7 +52,7 @@ composer require starrysea/multi-auth
 ```
 
 ```php
-// app\Exceptions\Handler.php
+// app/Exceptions/Handler.php
 
 class Handler extends ExceptionHandler
 {
