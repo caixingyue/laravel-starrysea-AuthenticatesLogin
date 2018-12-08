@@ -22,6 +22,35 @@ composer require starrysea/multi-auth
 ## 用法
 
 ```php
+// config/auth.php
+
+...
+'guards' => [
+    ...
+
+    'admin' => [
+        'driver' => 'session',
+        'provider' => 'admins',
+    ],
+
+    ...
+],
+
+'providers' => [
+    ...
+
+    'admins' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class,
+    ],
+    
+    ...
+],
+...
+
+```
+
+```php
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Starrysea\MultiAuth\MultiUsers;
