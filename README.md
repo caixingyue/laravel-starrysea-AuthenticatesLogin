@@ -24,31 +24,31 @@ composer require starrysea/multi-auth
 ```php
 // config/auth.php
 
-...
+// ...
 
 'guards' => [
-    ...
+    // ...
 
     'admin' => [
         'driver' => 'session',
         'provider' => 'admins',
     ],
 
-    ...
+    // ...
 ],
 
 'providers' => [
-    ...
+    // ...
 
     'admins' => [
         'driver' => 'eloquent',
         'model' => App\Models\Admin::class,
     ],
     
-    ...
+    // ...
 ],
 
-...
+// ...
 ```
 
 ```php
@@ -67,7 +67,7 @@ Route::get('/', 'Admin\IndexController@index')->middleware('auth:admin');
 
 class Handler extends ExceptionHandler
 {
-    ...
+    // ...
     
     /**
      * 重写没有登录时要跳转的登录页面
@@ -97,7 +97,7 @@ use Starrysea\MultiAuth\MultiUsers;
 class MultiUsersGatherTest
 {
     // 引入处理应用程序的身份验证用户组件
-    use AuthenticatesUsers,MultiUsers{
+    use AuthenticatesUsers, MultiUsers{
         MultiUsers::logout insteadof AuthenticatesUsers;
         MultiUsers::sendFailedLoginResponse insteadof AuthenticatesUsers;
     }
