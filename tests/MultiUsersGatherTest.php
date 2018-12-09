@@ -9,7 +9,7 @@ use Starrysea\MultiAuth\MultiUsers;
 class MultiUsersGatherTest
 {
     // 引入处理应用程序的身份验证用户组件
-    use AuthenticatesUsers,MultiUsers{
+    use AuthenticatesUsers, MultiUsers{
         MultiUsers::logout insteadof AuthenticatesUsers;
         MultiUsers::sendFailedLoginResponse insteadof AuthenticatesUsers;
     }
